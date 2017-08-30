@@ -1,0 +1,25 @@
+{
+  "name": "cryptobot-rebalancing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adrienaggery/CryptoBot-Rebalancing.git"
+  },
+  "author": "Adrien AGGERY",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adrienaggery/CryptoBot-Rebalancing/issues"
+  },
+  "homepage": "https://github.com/adrienaggery/CryptoBot-Rebalancing#readme",
+  "dependencies": {
+    "autobindr": "^1.0.5",
+    "aws-sdk": "^2.105.0",
+    "colors": "^1.1.2",
+    "mathjs": "^3.16.3"
+  }
+}

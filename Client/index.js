@@ -1,8 +1,9 @@
-const PAMR = require('../PAMR')
+const Client = require('./Client')
 
 const bt = eval(process.argv[2])
 const xt = eval(process.argv[3])
+const E = parseFloat(process.argv[4])
 
-const b = PAMR.PAMR0(bt, xt)
+const client = new Client(bt)
 
-console.log(b)
+client.receivePricesMovement(xt)

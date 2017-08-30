@@ -6,10 +6,13 @@ const portfolios = require('./PortfolioPermutations').indexed
 
 const _portfolioScore = (b, bt) => 0.5 * m.pow(m.norm(m.subtract(b, bt)), 2)
 
-const PAMR0 = (bt, xt) => {
+const PAMR0 = (bt, xt, E = 0.9) => {
+    if (Helper.insensitiveLoss(bt, xt, E) === 0) {
+        return bt
+    }
     const bestPortfolio = portfolios[bt.length][2] /* This selects the right permutations for the current portfolio */
         .reduce((acc, b) => {
-            if (Helper.insensitiveLoss(b, xt) === 0) {
+            if (Helper.insensitiveLoss(b, xt, E) === 0) {
                 const score = _portfolioScore(b, bt)
                 if (!acc.score || score < acc.score) {
                     acc.portfolio = b
