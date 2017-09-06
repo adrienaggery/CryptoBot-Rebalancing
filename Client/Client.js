@@ -42,7 +42,7 @@ class Client {
 
     _rebalancePortfolio(bt, btplus1) {
         Logger.info('Rebalancing...')
-        const diff = m.subtract(btplus1, bt)
+        const diff = m.subtract(btplus1, bt).map(asset => Math.round(asset * 100) / 100)
         /*
             Diff portfolios and calculate amounts to move.
             This involves making Bittrex calls to know how much BTC is on each pair.
