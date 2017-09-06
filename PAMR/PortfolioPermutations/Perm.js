@@ -1,5 +1,8 @@
-// Check if a given vector sums to 1 (using step)
+/*
+    Check if a given vector sums to 1 (using step)
+*/
 const isValidVector = (vector, step) => vector.reduce((sum, v) => sum + v, 0) === step
+
 /*
     function to increase a vector component by step (eg 0.01)
     incrementVectorIndex([0.44, 0.56], 0, 100) => [0.45, 0.56]
@@ -23,10 +26,12 @@ const perm = (size, filename, decimals = 2) => {
     file.write(']')
 }
 
+
 const size = parseInt(process.argv[2])
 const filename = process.argv[3]
 const decimals = parseInt(process.argv[4]) || undefined
 
+/*
+    Usage: node Perm <VectorSize> <OutputFilename> [<NumberOfDecimals>]
+*/
 perm(size, filename, decimals)
-
-// Usage: node Perm <VectorSize> <OutputFilename> [<NumberOfDecimals>]
