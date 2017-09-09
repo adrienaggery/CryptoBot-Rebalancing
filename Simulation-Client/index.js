@@ -3,10 +3,11 @@ const m = require('mathjs')
 const neo = require('./datasets/BTC-NEO')
 const ltc = require('./datasets/BTC-LTC')
 const strat = require('./datasets/BTC-STRAT')
+const eth = require('./datasets/BTC-ETH')
 
 const Client = require('../Client/Client')
 
-let b = [[0.25, 0.25, 0.25, 0.25]]
+let b = [[1, 0, 0, 0]]
 let x = []
 const length = 90
 
@@ -22,7 +23,7 @@ const getWealth = (b, x, wealth = 2) => {
     console.log(wealth)
 }
 
-const hammer = new Client([0.25, 0.25, 0.25, 0.25], ['BTC-BTC', 'BTC-NEO', 'BTC-LTC', 'BTC-STRAT'], onNewPortfolio)
+const hammer = new Client([1, 0, 0, 0], ['BTC-BTC', 'BTC-NEO', 'BTC-LTC', 'BTC-ETH'], onNewPortfolio)
 
 for (i = length - 2; i >= 0; i--) {
     //console.log(ltc[i],  ltc[i+1])

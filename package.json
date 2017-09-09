@@ -17,9 +17,12 @@
   },
   "homepage": "https://github.com/adrienaggery/CryptoBot-Rebalancing#readme",
   "dependencies": {
+    "async": "^2.5.0",
     "autobindr": "^1.0.5",
     "aws-sdk": "^2.105.0",
     "colors": "^1.1.2",
-    "mathjs": "^3.16.3"
+    "dotenv": "^4.0.0",
+    "mathjs": "^3.16.3",
+    "node.bittrex.api": "^0.6.2"
   }
 }

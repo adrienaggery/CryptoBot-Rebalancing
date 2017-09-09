@@ -8,6 +8,8 @@ const decimals = parseInt(process.argv[4]) || 2
 const step = m.pow(10, decimals)
 const file = fs.createWriteStream(path.join(__dirname, filename))
 
+var progress = 0
+
 /* Normalize a vector from [56, 44] to [0.56, 0.44] */
 const normalizeVector = (vector) => {
     return vector.map(v => v / step)
@@ -32,6 +34,9 @@ const incrementVectorIndex = (vector, index) => {
         vector[index] += 1
         if (isValidVector(vector)) {
             writeVector(vector)
+            progress += 1
+            if (!(progress % 100000))
+                process.stdout.write(`\r${progress}`)
             vector[index] = 0
             break;
         }
@@ -48,7 +53,7 @@ const perm = () => {
     let vector = Array(size).fill(0)
 
     incrementVectorIndex(vector, 0)
-
+    console.log(`\nNumber of permutations: ${progress}`)
 
     file.write(']\n')
 }

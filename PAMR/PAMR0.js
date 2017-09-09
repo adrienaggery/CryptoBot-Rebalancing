@@ -6,7 +6,7 @@ const portfolios = require('./PortfolioPermutations').indexed
 
 const _portfolioScore = (b, bt) => 0.5 * m.pow(m.norm(m.subtract(b, bt)), 2)
 
-const PAMR0 = (bt, xt, E = 0.9) => {
+const PAMR0 = (bt, xt, E = 0.98) => {
     if (Helper.insensitiveLoss(bt, xt, E) === 0) {
         return bt
     }

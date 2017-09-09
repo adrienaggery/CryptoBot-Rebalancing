@@ -25,9 +25,21 @@ const info = message => {
     _log(type, message)
 }
 
+const buy = message => {
+    const type = '[Buy]'.black.bgGreen
+    _log(type, message)
+}
+
+const sell = message => {
+    const type = 'Sell'.black.bgRed
+    _log(type, message)
+}
+
 module.exports = {
     success,
     warning,
     error,
-    info
+    info,
+    buy,
+    sell
 }
