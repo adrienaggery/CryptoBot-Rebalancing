@@ -5,7 +5,7 @@ const colors = require('colors')
 const m = require('mathjs')
 
 const PAMR = require('../PAMR')
-const Bittrex = require('../shared/Bittrex')
+const Bittrex = require('../Shared/Bittrex')
 const Logger = require('../Shared/Logger')
 
 class Client {

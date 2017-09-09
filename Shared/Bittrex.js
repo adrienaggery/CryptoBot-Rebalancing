@@ -6,7 +6,7 @@ bittrex.options({
     'apisecret' : process.env.BITTREX_API_SECRET
 })
 
-const Logger = require('../shared/Logger')
+const Logger = require('../Shared/Logger')
 
 const buyMarket = (pair, volume = 0) => {
     if (typeof volume !== 'number') { return }
