@@ -73,13 +73,13 @@ class Client {
         */
         const diff = m.subtract(btplus1, bt).map(asset => Math.round(asset * 100) / 100)
         Logger.info(`Assets move: ${diff.map(move => move > 0 ? move.toFixed(2).green.bold : move.toFixed(2).red.bold)}`)
-        diff.forEach((volume, i) => this._tradeAsset(volume, this.portfolioPairs[i]))
+        diff.forEach((volume, i) => this._tradeAsset(volume, this.portfolioPairs[i], i))
     }
 
-    _tradeAsset(percentVolume, pair) {
+    _tradeAsset(percentVolume, pair, i) {
         if (pair === 'BTC-BTC') // Skip BTC as we're not trading it.
             return
-        const realVolume = Math.abs(percentVolume) * this.investedAmount
+        const realVolume = (Math.abs(percentVolume) * this.investedAmount) / this.lastPrices[i]
         if (percentVolume < 0)
             Bittrex.sellMarket(pair, realVolume)
         if (percentVolume > 0)

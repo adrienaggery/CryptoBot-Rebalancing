@@ -16,7 +16,7 @@ const buyMarket = (pair, volume = 0) => {
         //Logger.buy(`Fake Buy   Pair: ${pair}   Last: ${ticker.result.Last}   Volume: ${volume}`)
         bittrex.sendCustomRequest(url, (res, err) => {
             if (err) {
-                Logger.error(`Buy attempt failed. ${err}`)
+                Logger.error(`Buy attempt failed. ${JSON.stringify(err)}`)
             } else {
                 getOrderDetails(res.result.uuid, (err, res) => {
                     const {
@@ -39,7 +39,7 @@ const sellMarket = (pair, volume) => {
         //Logger.sell(`Fake Sell   Pair: ${pair}   Last: ${ticker.result.Last}   Volume: ${volume}`)
         bittrex.sendCustomRequest(url, (res, err) => {
             if (err) {
-                Logger.error(`Sell attempt failed. ${err}`)
+                Logger.error(`Sell attempt failed. ${JSON.stringify(err)}`)
             } else {
                 getOrderDetails(res.result.uuid, (err, res) => {
                     const {
