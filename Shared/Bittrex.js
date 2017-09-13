@@ -30,7 +30,7 @@ const _getAmountSAT = (orderType, finalAmountSAT) => {
 }
 
 const _drillDownOrderBook = (orderBook, amountSAT) => {
-    const orderParams = { filledSAT, = 0, amoutALT = 0, limitPrice: 0 }
+    const orderParams = { filledSAT: 0, amountALT: 0, limitPrice: 0 }
     const orderBookLength = orderBook.length
     for (i = 0; i < orderBookLength; i++) {
         if (orderParams.filledSAT >= amountSAT)
@@ -77,8 +77,14 @@ const _tradeAsset = (pair, orderType, finalAmountSAT, callback) => {
 
 const rebalancePortfolio = (investedAmount, pairs, oldPortfolio, newPortfolio) => {
     const diff = m.subtract(newPortfolio, oldPortfolio).map(asset => Math.round(asset * 100) / 100)
-    const sellTasks = diff.map((asset, i) => _isSell(asset) && (callback) => _tradeAsset(pair[i], 'SELL', investedAmount * asset, callback))
-    const buyTasks = diff.map((asset, i) => _isBuy(asset) && (callback) => _tradeAsset(pair[i], 'BUY', investedAmount * asset, callback))
+    const sellTasks = diff.map((asset, i) => {
+        if (_isSell(asset))
+            return (callback) => _tradeAsset(pair[i], 'SELL', investedAmount * asset, callback)
+    })
+    const buyTasks = diff.map((asset, i) => {
+        if (_isBuy(asset))
+            return (callback) => _tradeAsset(pair[i], 'BUY', investedAmount * asset, callback)
+    })
 
     Logger.info('Selling assets...')
     async.parallel(sellTasks, (err, res) => {
