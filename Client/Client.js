@@ -33,32 +33,11 @@ class Client {
             Logger.warning('No portfolio vector (bt) has been found.')
         else {
             const btplus1 = PAMR.PAMR0(this.bt, this.xt, this.epsilon)
-            Logger.info(`New portfolio ${JSON.stringify(btplus1).bold}.`)
+            Logger.success(`New portfolio ${JSON.stringify(btplus1).bold}.`)
             if (this.newPortfolioCallback)
                 this.newPortfolioCallback(btplus1)
             this.bt = btplus1
         }
-    }
-
-    _rebalancePortfolio(bt, btplus1) {
-        Logger.info('Rebalancing...')
-        /*
-            Diff portfolios.
-            Negative values are Sell, Positive are Buy.
-        */
-        const diff = m.subtract(btplus1, bt).map(asset => Math.round(asset * 100) / 100)
-        Logger.info(`Assets move: ${diff.map(move => move > 0 ? move.toFixed(2).green.bold : move.toFixed(2).red.bold)}`)
-        diff.forEach((volume, i) => this._tradeAsset(volume, this.portfolioPairs[i], i))
-    }
-
-    _tradeAsset(percentVolume, pair, i) {
-        if (pair === 'BTC-BTC') // Skip BTC as we're not trading it.
-            return
-        const realVolume = (Math.abs(percentVolume) * this.investedAmount) / this.lastPrices[i]
-        if (percentVolume < 0)
-            Bittrex.sellMarket(pair, realVolume)
-        if (percentVolume > 0)
-            Bittrex.buyMarket(pair, realVolume)
     }
 }
 

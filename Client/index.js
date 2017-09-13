@@ -17,9 +17,9 @@ bot
 
         const client = new Client(initialPortfolio, command.epsilon, Bittrex.rebalancePortfolio.bind(command.investedAmount, pairNames))
 
-        Bittrex.getPrices(pairNames, client.receiveNewPrices)
+        Bittrex.getLastPrices(pairNames, (err, res) => client.receiveNewPrices(res))
         setInterval(() => {
-            Bittrex.getPrices(pairNames, client.receiveNewPrices)
+            Bittrex.getLastPrices(pairNames, (err, res) => client.receiveNewPrices(res))
         }, command.tradeInterval)
     })
     .parse(process.argv)
