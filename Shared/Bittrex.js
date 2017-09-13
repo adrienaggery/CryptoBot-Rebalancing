@@ -80,11 +80,11 @@ const rebalancePortfolio = (investedAmount, pairs, oldPortfolio, newPortfolio) =
     const sellTasks = diff.map((asset, i) => {
         if (_isSell(asset))
             return (callback) => _tradeAsset(pair[i], 'SELL', investedAmount * asset, callback)
-    })
+    }).filter(t => t)
     const buyTasks = diff.map((asset, i) => {
         if (_isBuy(asset))
             return (callback) => _tradeAsset(pair[i], 'BUY', investedAmount * asset, callback)
-    })
+    }).filter(t => t)
 
     Logger.info('Selling assets...')
     async.parallel(sellTasks, (err, res) => {
