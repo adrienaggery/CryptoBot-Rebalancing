@@ -39,11 +39,12 @@ const _drillDownOrderBook = (orderBook, amountSAT) => {
     const orderParams = { filledSAT: 0, amountALT: 0, limitPrice: 0 }
     const orderBookLength = orderBook.length
     for (i = 0; i < orderBookLength; i++) {
+        const order = orderBook[i]
         if (orderParams.filledSAT >= amountSAT)
             break
         const availableToFillSAT = order.Quantity * order.Rate
         const maxFillSAT = Math.min(availableToFillSAT, amountSAT - orderParams.filledSAT)
-        const fillALT = order.Quantity * (availableToFillSAT / maxFillSAT)
+        const fillALT = order.Quantity * (maxFillSAT / availableToFillSAT)
         orderParams.filledSAT += maxFillSAT
         orderParams.amountALT += fillALT
         orderParams.limitPrice = order.Rate
@@ -72,12 +73,12 @@ const _tradeAsset = (pair, orderType, finalAmountSAT, callback) => {
         const url = `${_getTradeUrl(orderType)}?market=${pair}&quantity=${params.amountALT}&rate=${params.limitPrice}`
         bittrex.sendCustomRequest(url, (res, err) => {
             if (err) {
-                Logger.error(`Could not ${orderType} ${params.amountALT} ${pair.bold} at rate ${params.limitPrice}. Error: ${JSON.stringify(err)}.`)
+                Logger.error(`Could not ${orderType} ${params.amountALT} ${pair.bold} at limit price ${params.limitPrice}. Error: ${JSON.stringify(err)}.`)
                 return callback(true)
             }
             Logger.buy(`${params.amountALT} ${pair.bold} at rate ${params.limitPrice}.`)
             callback(null)
-        })
+        }, true)
     })
 }
 
@@ -85,11 +86,11 @@ const rebalancePortfolio = (investedAmount, pairs, oldPortfolio, newPortfolio) =
     const diff = m.subtract(newPortfolio, oldPortfolio).map(asset => Math.round(asset * 100) / 100)
     const sellTasks = diff.map((asset, i) => {
         if (_isSell(asset))
-            return (callback) => _tradeAsset(pair[i], 'SELL', investedAmount * asset, callback)
+            return (callback) => _tradeAsset(pairs[i], 'SELL', investedAmount * asset, callback)
     }).filter(t => t)
     const buyTasks = diff.map((asset, i) => {
         if (_isBuy(asset))
-            return (callback) => _tradeAsset(pair[i], 'BUY', investedAmount * asset, callback)
+            return (callback) => _tradeAsset(pairs[i], 'BUY', investedAmount * asset, callback)
     }).filter(t => t)
 
     Logger.info('Selling assets...')

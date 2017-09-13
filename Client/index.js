@@ -12,7 +12,7 @@ bot
     .arguments('<pairnames> <initialportfolio>')
     .option('-e, --epsilon <epsilon>', 'specify the Epsilon value used by the Insensitive Loss function', parseFloat, 0.98)
     .option('-C, --agressivity <agressivity>', 'specify the agressivity C value used by the PAMR1/2 rebalancing', parseFloat, 0)
-    .option('-t, --tradeinterval <tradeinterval>', 'specify the interval between each price update and rebalancing')
+    .option('-t, --tradeinterval <tradeinterval>', 'specify the interval (in ms) between each price update and rebalancing')
     .option('-i, --investedamount <investedamount>', 'specify the amount in BTC invested in this portfolio', parseFloat, 0)
     .action((pairnames, initialportfolio, options) => {
         pairnames = JSON.parse(pairnames)
