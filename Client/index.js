@@ -1,9 +1,25 @@
+#!/usr/bin/env node
+
+const bot = require('commander')
+const Bittrex = require('../Shared/Bittrex')
 const Client = require('./Client')
 
-//const pairs = ['BTC-BTC', 'BTC-NEO', 'BTC-LTC', 'BTC-ETH']
-const pairs = JSON.parse(process.argv[2])
-const bt = eval(process.argv[3])
-const tradeInterval = parseInt(process.argv[4])
-const investedAmount = parseFloat(process.argv[5])
+bot
+    .version('1.1.0')
+    .usage('<pairNames> <initialPortfolio> [options]')
+    .arguments('<pairNames> <initialPortfolio>')
+    .option('-e --epsilon [epsilon]', 'specify the Epsilon value used by the Insensitive Loss function', parseFloat, 0.98)
+    .option('-t --tradeinterval [tradeInterval]', 'specify the interval between each price update and rebalancing', parseInt, 14400000)
+    .option('-i --investedamount [investedAmount]', 'specify the amount in BTC invested in this portfolio', parseFloat, 0)
+    .action((pairNames, initialPortfolio, command) => {
+        pairNames = eval(pairNames)
+        initialPortfolio = eval(initialPortfolio)
 
-const client = new Client(pairs, bt, tradeInterval, investedAmount)
+        const client = new Client(initialPortfolio, command.epsilon, Bittrex.rebalancePortfolio.bind(command.investedAmount, pairNames))
+
+        Bittrex.getPrices(pairNames, client.receiveNewPrices)
+        setInterval(() => {
+            Bittrex.getPrices(pairNames, client.receiveNewPrices)
+        }, command.tradeInterval)
+    })
+    .parse(process.argv)

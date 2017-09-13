@@ -21,6 +21,7 @@
     "autobindr": "^1.0.5",
     "aws-sdk": "^2.105.0",
     "colors": "^1.1.2",
+    "commander": "^2.11.0",
     "dotenv": "^4.0.0",
     "mathjs": "^3.16.3",
     "node.bittrex.api": "^0.6.2"
