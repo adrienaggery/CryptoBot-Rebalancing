@@ -1,6 +1,12 @@
-const bittrex = require('node.bittrex.api')
 const m = require('mathjs')
 const async = require('async')
+const bittrex = require('node.bittrex.api')
+bittrex.options({
+    'apikey' : process.env.BITTREX_API_KEY,
+    'apisecret' : process.env.BITTREX_API_SECRET
+})
+
+const Logger = require('./Logger')
 
 const _isSell = n => n < 0 || undefined
 const _isBuy = n => n > 0 || undefined

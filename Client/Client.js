@@ -6,7 +6,7 @@ const PAMR = require('../PAMR')
 const Logger = require('../Shared/Logger')
 
 class Client {
-    constructor(initialPortfolio = [], epsilon = 0.99, newPortfolioCallback) {
+    constructor(initialPortfolio, epsilon, newPortfolioCallback) {
         autobind(this)
 
         this.prices = null
@@ -27,15 +27,25 @@ class Client {
         this.prices = newPrices
     }
 
+    _formatPriceVector(x) {
+        return '[' + x.map(price => {
+            if (price > 1)
+                return `${price}`.green
+            if (price < 1)
+                return `${price}`.red
+            return price
+        }) + ']'
+    }
+
     _getNewPortfolio(xt) {
         Logger.info('Computing new portfolio...')
         if (!this.bt)
             Logger.warning('No portfolio vector (bt) has been found.')
         else {
-            const btplus1 = PAMR.PAMR0(this.bt, this.xt, this.epsilon)
+            const btplus1 = PAMR.PAMR0(this.bt, xt, this.epsilon)
             Logger.success(`New portfolio ${JSON.stringify(btplus1).bold}.`)
             if (this.newPortfolioCallback)
-                this.newPortfolioCallback(btplus1)
+                this.newPortfolioCallback(this.bt, btplus1)
             this.bt = btplus1
         }
     }
