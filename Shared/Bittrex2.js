@@ -32,9 +32,10 @@ const _drillDownOrderBook = (orderBook, amountSAT) => {
         if (orderParams.filledSAT >= amountSAT)
             break
         const availableToFillSAT = order.Quantity * order.Rate
-        const fillSAT = Math.min(availableToFillSAT, orderParams.filledSAT)
-        orderParams.filledSAT += fillSAT
-        orderParams.amountALT += fillSAT * order.Rate
+        const maxFillSAT = Math.min(availableToFillSAT, amountSAT - orderParams.filledSAT)
+        const fillALT = order.Quantity * (availableToFillSAT / maxFillSAT)
+        orderParams.filledSAT += maxFillSAT
+        orderParams.amountALT += fillALT
         orderParams.limitPrice = order.Rate
     }
     return orderParams
@@ -45,7 +46,7 @@ const _getOrderParams = (pair, orderType, finalAmountSAT, callback) => {
     const orderBookSide = _getOrderBookSide(orderType)
     bittrex.getorderbook({ market: pair, type: orderBookSide }, (res, err) => {
         if (err) {
-            Logger.error(`Could not load ${pair} ${orderBookSide.bold} order book.`)
+            Logger.error(`Could not load ${pair} ${orderBookSide.bold} order book. Error: ${JSON.stringify(err)}.`)
             return callback(true)
         }
         callback(null, _drillDownOrderBook(res.result, amountSAT))
@@ -78,5 +79,3 @@ const rebalancePortfolio = (investedAmount, pairs, oldPortfolio, newPortfolio) =
 module.exports = {
     rebalancePortfolio
 }
-
-// amount * 1.0025 = finalamount
