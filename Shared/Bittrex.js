@@ -110,9 +110,12 @@ const getLastPrices = (pairs, callback) => {
     const tasks = pairs.map((pair) => (callback) => {
         if (pair === 'BTC-BTC') return callback(null, 1)
         bittrex.getticker({ market: pair }, (ticker, err) => {
-            if (err) {
-                Logger.error(`Could not fetch last price of ${pair}. Error: ${JSON.stringify(err)}.`)
-                return callback(err)
+            if (err || !ticker.success || typeof ticker.result.Last !== 'number') {
+                if (err)
+                    Logger.error(`Could not fetch last price of ${pair}. Error: ${JSON.stringify(err)}.`)
+                else
+                    Logger.error(`Could not fetch last price of ${pair}. Response was OK but got ${JSON.stringify(ticker)}.`)
+                return callback(true)
             }
             callback(null, ticker.result.Last)
         })
