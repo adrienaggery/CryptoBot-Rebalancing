@@ -19,7 +19,6 @@
   "dependencies": {
     "async": "^2.5.0",
     "autobindr": "^1.0.5",
-    "aws-sdk": "^2.105.0",
     "colors": "^1.1.2",
     "commander": "^2.11.0",
     "dotenv": "^4.0.0",
