@@ -42,7 +42,7 @@ class Client {
         if (!this.bt)
             Logger.warning('No portfolio vector (bt) has been found.')
         else {
-            const btplus1 = PAMR.PAMR0(this.bt, xt, this.epsilon)
+            const btplus1 = PAMR(xt, this.bt, this.epsilon)
             Logger.info(`New portfolio ${JSON.stringify(btplus1).bold}.`)
             if (this.newPortfolioCallback)
                 this.newPortfolioCallback(this.bt, btplus1)
