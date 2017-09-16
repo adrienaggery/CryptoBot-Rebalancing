@@ -1,4 +1,4 @@
-const m = require('./mathjs')
+const m = require('mathjs')
 const { vectoravg } = require('../math')
 
 const taut1 = (insensitiveLoss, xt, C) => {

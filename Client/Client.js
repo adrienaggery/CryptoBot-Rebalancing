@@ -16,11 +16,13 @@ class Client {
         this.newPortfolioCallback = newPortfolioCallback
         this.algo = algo
         this.C = C
-        
-        Logger.info('Bot is running.')
+
+        Logger.info(`Bot is running. initial portfolio: ${this.bt}`)
     }
 
-    receiveNewPrices(newPrices) {
+    receiveNewPrices(newPrices, oldPrices) {
+        if (oldPrices)
+            this.prices = oldPrices
         Logger.info(`Received new prices ${newPrices}.`)
         if (this.prices && newPrices) {
             const xt = m.dotDivide(newPrices, this.prices)
