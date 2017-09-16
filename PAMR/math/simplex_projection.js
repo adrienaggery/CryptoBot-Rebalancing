@@ -14,7 +14,7 @@ const simplex_projection = (v, s = 1) => {
 
     const cssv = cumsum(u)
 
-    const rho = nonzero(m.larger(m.multiply(u, arange(1, v.length + 1)), m.subtract(cssv, s))).slice(-1)[0]
+    const rho = nonzero(m.larger(m.dotMultiply(u, arange(1, v.length + 1)), m.subtract(cssv, s))).slice(-1)[0]
 
     const theta = Math.max(0, parseFloat(cssv[rho] - s) / rho)
 
