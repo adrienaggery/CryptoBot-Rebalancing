@@ -6,14 +6,17 @@ const PAMR = require('../PAMR')
 const Logger = require('../Shared/Logger')
 
 class Client {
-    constructor(initialPortfolio, epsilon, newPortfolioCallback) {
+    constructor(initialPortfolio, epsilon, newPortfolioCallback, algo = 'PAMR0', C) {
         autobind(this)
 
         this.prices = null
-        this.epsilon = epsilon
-        this.bt = initialPortfolio
-        this.newPortfolioCallback = newPortfolioCallback
 
+        this.bt = initialPortfolio
+        this.epsilon = epsilon
+        this.newPortfolioCallback = newPortfolioCallback
+        this.algo = algo
+        this.C = C
+        
         Logger.info('Bot is running.')
     }
 

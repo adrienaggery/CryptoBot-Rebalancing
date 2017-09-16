@@ -1,14 +1,11 @@
-const PAMRHelper = require('./PAMRHelper')
-const mathHelper = require('./mathHelper')
+const { insensitiveLoss, taut, btplus1 } = require('./pamr_functions')
+const { simplex_projection } = require('./math')
 
 const PAMR = (bt, xt, E, algo = 'PAMR0', C) => {
-    const ltE = PAMRHelper.insensitiveLoss(bt, xt, E)
-    console.log(`ltE: ${ltE}`)
-    const taut = PAMRHelper.tau[algo](ltE, xt)
-    console.log(`taut: ${taut}`)
-    const btplus1 = PAMRHelper.btplus1(bt, taut, xt)
-    console.log(`btplus1: ${btplus1}`)
-    const btplus1Normalized = mathHelper.simplex_projection(btplus1, 1)
+    const ltE = insensitiveLoss(bt, xt, E)
+    const taut = taut[algo](ltE, xt, C)
+    const btplus1 = btplus1(bt, taut, xt)
+    const btplus1Normalized = simplex_projection(btplus1, 1)
 
     return btplus1Normalized
 }
