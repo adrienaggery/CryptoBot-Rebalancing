@@ -1,7 +1,7 @@
 const m = require('mathjs')
 
 const arrayCumsum = (a) => a.reduce((r, v) => {
-    r.push((r.length && r[r.length - 1] || 0) + a)
+    r.push((r.length && r[r.length - 1] || 0) + v)
     return r
 }, [])
 
@@ -17,22 +17,31 @@ const clip = (n, c = {}) => {
 
 const arrayClip = (a, c) => a.map(v => clip(v, c))
 
+const arrayRange = (start, end) => {
+    const a = []
+    for (i = 0; i + start < end; i++) {
+        a.push(i + start)
+    }
+    return a
+}
+
 const vectorAverage = (v) => m.sum(v) / v.length
 
 const simplex_projection = (v, s = 1) => {
-    if (m.sum(v) === s && !v.some(a <= 0))
+    if (m.sum(v) === s && v.every(a => a >= 0))
         return v
-
+    console.log(`v: ${v}`)
     v = v.map(a => Math.max(a, 0))
-
+    console.log(`v: ${v}`)
     const u = v.slice().sort().reverse()
+    console.log(`u: ${u}`)
     const cssv = arrayCumsum(u)
-
-    const rho = arrayNonzero(m.larger(m.multiply(u, arange(1, v.length + 1)), m.subtract(cssv, s))).slice(-1)[0]
-
+    console.log(`cssv: ${cssv}`)
+    const rho = arrayNonzero(m.larger(m.multiply(u, arrayRange(1, v.length + 1)), m.subtract(cssv, s))).slice(-1)[0]
+    console.log(`rho: ${rho}`)
     const theta = Math.max(0, parseFloat(cssv[rho] - s) / rho)
-
-    const w = arrayClip(m.sutract(v, theta), { min: 0 })
+    console.log(`theta: ${theta}`)
+    const w = arrayClip(m.subtract(v, theta), { min: 0 })
 
     return w
 }
