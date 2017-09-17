@@ -1,3 +1,9 @@
-const toFloat2 = v => Number(Math.round(v + 'e2') + 'e-2')
+const toFloat2 = n => Number(Math.round(n + 'e2') + 'e-2')
 
-module.exports = toFloat2
+module.exports = (value) => {
+    if (typeof value === 'number')
+        return toFloat2(value)
+    if (Array.isArray(value))
+        return value.map(v => toFloat2(v))
+    throw new TypeError()
+}
