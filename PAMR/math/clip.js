@@ -11,5 +11,5 @@ module.exports = (value, c) => {
         return value.map(v => clip(v, c))
     if (typeof value === 'number')
         return clip(value, c)
-    throw new TypeError
+    throw new TypeError(`Argument 'value' should be of type number or array, but got ${typeof value} instead.`)
 }

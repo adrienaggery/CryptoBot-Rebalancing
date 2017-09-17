@@ -1,8 +1,8 @@
 const arange = (start, end) => {
     if (typeof start !== 'number')
-        throw new TypeError()
+        throw new TypeError(`Argument 'start' should be of type number, but got ${typeof start} instead.`)
     if (end !== undefined && typeof end !== 'number')
-        throw new TypeError()
+        throw new TypeError(`Argument 'end' should be undefined or of type number, but got ${typeof end} instead.`)
 
     if (end === undefined) {
         end = start
