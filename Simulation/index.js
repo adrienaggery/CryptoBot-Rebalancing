@@ -52,17 +52,14 @@ bot
 
         const client = new Client(initialPortfolio, E, onNewPortfolio, algo, C)
 
-        const oldP = [1, ...getPairsClose(0 + 1, pairs)]
-        const newP = [1, ...getPairsClose(0, pairs)]
-        client.receiveNewPrices(newP, oldP)
-return
-        for (i = s + c; i >= s; i--) {
+        let i = s + c
+        while (i >= s) {
             const oldP = [1, ...getPairsClose(i + 1, pairs)]
             const newP = [1, ...getPairsClose(i, pairs)]
             const xt = m.dotDivide(newP, oldP)
             x.push(xt)
             client.receiveNewPrices(newP, oldP)
-            console.log(i)
+            i--
         }
 
         const wealth = getWealth(b, x, investedamount)

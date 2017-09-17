@@ -9,5 +9,7 @@ const clip = (n, c = {}) => {
 module.exports = (value, c) => {
     if (Array.isArray(value))
         return value.map(v => clip(v, c))
-    return clip(value, c)
+    if (typeof value === 'number')
+        return clip(value, c)
+    throw new TypeError
 }

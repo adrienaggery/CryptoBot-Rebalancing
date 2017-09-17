@@ -18,7 +18,7 @@ const simplex_projection = (v, s = 1) => {
 
     const theta = Math.max(0, parseFloat(cssv[rho] - s) / rho)
 
-    const w = clip(m.subtract(v, theta), { min: 0, max:1 })
+    const w = clip(m.subtract(v, theta), { min: 0 })
 
     return w
 }
