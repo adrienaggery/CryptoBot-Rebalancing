@@ -6,6 +6,12 @@ const arange = require('./arange')
 const clip = require('./clip')
 
 const simplex_projection = (v, s = 1) => {
+    if (!Array.isArray(v))
+        throw new TypeError(`Argument 'v' should be of type Array, but got ${typeof v} instead.`)
+    if (typeof s !== 'number')
+        throw new TypeError(`Argument 's' should be of type Number, but got ${typeof s} instead.`)
+
+
     if (m.sum(v) === s && v.every(a => a >= 0))
         return v
 
