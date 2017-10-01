@@ -1,8 +1,11 @@
 #!/usr/bin/env node
+
+/* eslint-disable */
+
 const m = require('mathjs')
 const bot = require('commander')
 
-const Client = require('../Client/Client')
+const PAMR = require('../PAMR')
 const datasets = {
     neo: require('./datasets-16-09-17/BTC-NEO'),
     omg: require('./datasets-16-09-17/BTC-OMG'),
@@ -16,16 +19,37 @@ const datasets = {
     etc: require('./datasets-16-09-17/BTC-ETC')
 }
 
-var b = []
-var x = []
-
 const getPairsClose = (i, pairs) => pairs.map(pair => datasets[pair][i].close)
 const onNewPortfolio = (bt, btplus1) => b.push(btplus1)
-const getWealth = (b, x, wealth) => {
+const getWealth = (wealth, b, x) => {
     const length = Math.min(b.length, x.length)
-    for (i = 0; i < length; i++) {
-        wealth *= m.dot(b[i], x[i])
+    const _b = b.slice(-length)
+    const _x = x.slice(-length)
+    for (i = length - 1; i >= 0; i--) {
+        const dailyReturn = m.dot(_b[i], _x[i])
+        if (dailyReturn > 0)
+            wealth *= dailyReturn
     }
+    return wealth
+}
+
+const runSimulation = (pamr, pairs, s, c, investedamount) => {
+    const b = []
+    const x = []
+    b.unshift(pamr.bt)
+
+    let i = s + c
+    while (i >= s) {
+        const newP = [...getPairsClose(i, pairs)]
+        const oldP = [...getPairsClose(i + 1, pairs)]
+        const xt = m.dotDivide(newP, oldP)
+        const portfolio = pamr.rebalance(xt)
+        x.unshift(xt)
+        b.unshift(portfolio)
+        i--
+    }
+
+    const wealth = getWealth(investedamount, b, x)
     return wealth
 }
 
@@ -35,34 +59,35 @@ bot
     .arguments('<pairs...>')
     .option('-s, --start <start>', 'specify the start datapoint (10 would be 10 datapoints from now)')
     .option('-c, --count <count>', 'specify how much datapoints should be computed')
-    .option('-a, --algo <algo>', 'specify with algorithm to use (PAMR0, PAMR1, PAMR2)')
-    .option('-e, --epsilon <epsilon>', 'specify the Epsilon value used by the Insensitive Loss function')
+    .option('-v, --variant <variant>', 'specify with algorithm to use (PAMR0 = 0, PAMR1 = 1, PAMR2 = 2)')
+    .option('-E, --epsilon <epsilon>', 'specify the Epsilon value used by the Insensitive Loss function')
     .option('-C, --agressivity <agressivity>', 'specify the agressivity C value used by the PAMR1/2 rebalancing')
     .option('-i, --investedamount <investedamount>', 'specify the amount in BTC invested in this portfolio (recommended min is 0.05 as this allows to prevent placing orders less than 50k SAT)')
     .action((pairs, options) => {
         const s = parseInt(options.start) || 0
         const c = parseInt(options.count) || 30
-        const algo = options.algo
-        const E = parseFloat(options.epsilon) || 0.98
+        const variant = parseInt(options.variant) || 0
+        const E = parseFloat(options.epsilon) || undefined
         const C = parseFloat(options.aggressivity) || 0
         const investedamount = parseFloat(options.investedamount) || 0
 
-        initialPortfolio = Array(pairs.length + 1).fill(1).fill(0, 1)
-        b.push(initialPortfolio)
+        const results = []
 
-        const client = new Client(initialPortfolio, E, onNewPortfolio, algo, C)
-
-        let i = s + c
-        while (i >= s) {
-            const oldP = [1, ...getPairsClose(i + 1, pairs)]
-            const newP = [1, ...getPairsClose(i, pairs)]
-            const xt = m.dotDivide(newP, oldP)
-            x.push(xt)
-            client.receiveNewPrices(newP, oldP)
-            i--
+        if (typeof E !== 'number') {
+            for (e = 0; e < 1; e += 0.05) {
+                const initialPortfolio = Array(pairs.length).fill(0)
+                const pamr = new PAMR(initialPortfolio, e, variant, C)
+                const wealth = runSimulation(pamr, pairs, s, c, investedamount)
+                results.push({e, wealth})
+            }
+        } else {
+            const initialPortfolio = Array(pairs.length).fill(0)
+            const pamr = new PAMR(initialPortfolio, E, variant, C)
+            const wealth = runSimulation(pamr, pairs, s, c, investedamount)
+            results.push({E, wealth})
         }
 
-        const wealth = getWealth(b, x, investedamount)
-        console.log(wealth)
+        console.log(results)
+
     })
     .parse(process.argv)

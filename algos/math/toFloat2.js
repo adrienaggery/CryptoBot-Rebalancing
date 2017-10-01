@@ -1,4 +1,5 @@
 const toFloat2 = n => Number(Math.round(n + 'e2') + 'e-2')
+//const toFloat2 = n => Math.round((n + 0.00001) * 100) / 100
 
 module.exports = value => {
     if (typeof value === 'number')

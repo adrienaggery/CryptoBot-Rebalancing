@@ -12,7 +12,7 @@ const taut1 = (insensitiveLoss, xt, C) => {
     const denominator = m.pow(m.norm(m.subtract(xt, vectoravg(xt))), 2)
     if (denominator === 0)
         return 0
-    const taut = insensitiveLoss / m.pow(m.norm(m.subtract(xt, vectoravg(xt))), 2)
+    const taut = insensitiveLoss / denominator
     return Math.min(C, Math.max(0, taut))
 }
 

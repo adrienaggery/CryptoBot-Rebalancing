@@ -5,9 +5,9 @@ const btplus1 = require('./btplus1')
 
 module.exports = {
     insensitiveLoss,
-    taut: {
-        PAMR0: taut0,
-        PAMR1: taut1
-    },
+    taut: [
+        taut0,
+        taut1
+    ],
     btplus1
 }
