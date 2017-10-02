@@ -18,7 +18,7 @@ class Algo {
     if (typeof m !== 'number') {
       throw new TypeError(`Argument m should be a number but got ${typeof m} instead.`);
     }
-    return Array(m).fill(0);
+    return Array(m).fill(1).fill(0, 1);
   }
 
   /**
@@ -98,10 +98,14 @@ class Algo {
    * @param {number} initial - Initial wealth
    * @return {number} - wealth after period
    */
-  getWealth(initial) {
+  computeWealth(initial) {
     const length = Math.min(this.B.length, this.X.length);
     const B = this.B.slice(-length);
     const X = this.X.slice(-length);
+
+    if (X.length === 0) {
+      return initial;
+    }
 
     const dailyReturns = B.map((b, i) => mathjs.dot(b, X[i]));
     const wealth = dailyReturns.reduce((acc, v) => acc * v, initial);

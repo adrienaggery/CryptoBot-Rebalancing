@@ -30,7 +30,7 @@ describe('Pamr', () => {
     });
     it('should return an array of same size than instance.m', () => {
       const instance = new Pamr(4);
-      instance.X = [[1.1, 0.95, 0.98, 1.02]];
+      instance.X = [[1.1, 0.8, 0.98, 1.02]];
       expect(Array.isArray(instance.computeWeights())).toBe(true);
       expect(instance.computeWeights()).toHaveLength(4);
     });

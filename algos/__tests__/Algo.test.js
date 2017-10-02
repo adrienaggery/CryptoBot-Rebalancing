@@ -74,4 +74,26 @@ describe('Algo', () => {
       expect(instance.X[0]).toEqual(mathjs.dotDivide(prices2, prices1));
     });
   });
+  describe('computeWealth()', () => {
+    it('should return the initial wealth if X is empty', () => {
+      const instance = new Algo(4);
+      expect(instance.computeWealth(1)).toBe(1);
+    });
+    it('should return the correct result', () => {
+      const instance = new Algo(4);
+      instance.X = [[1.1, 0.9, 0.98, 1.034]];
+      expect(instance.computeWealth(1)).toBe(1.1);
+    });
+    it('should return the correct result', () => {
+      const instance = new Algo(4);
+      instance.X = [[1.1, 0.9, 0.98, 1.034], [0.97, 1.01, 1.08, 0.89]];
+      expect(instance.computeWealth(1)).toBe(0.97);
+    });
+    it('should return the correct result', () => {
+      const instance = new Algo(4);
+      instance.X = [[1.1, 0.9, 0.98, 1.034], [0.97, 1.01, 1.08, 0.89]];
+      instance.B.unshift([0, 1, 0, 0]);
+      expect(instance.computeWealth(1)).toBe(0.873);
+    });
+  });
 });
