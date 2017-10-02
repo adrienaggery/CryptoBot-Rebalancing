@@ -12,8 +12,6 @@ const { vectoravg, simplex_projection } = require('./math');
  *    http://www.cais.ntu.edu.sg/~chhoi/paper_pdf/PAMR_ML_final.pdf
  */
 class Pamr extends Algo {
-  static PRICE_TYPE = 'ratio';
-
   /**
    * initiaize Pamr.
    *
@@ -22,8 +20,10 @@ class Pamr extends Algo {
    * @param {number} E - Epsilon value used by Insensitive Loss function
    * @param {number} C - Aggressivity parameter used by variant 1 and 2
    */
-  constructor(m, variant, E, C) {
+  constructor(m, variant = 0, E = 0.5, C = 500) {
     super(m);
+
+    this.PRICE_TYPE = 'ratio';
 
     this.variant = variant;
     this.E = E;
@@ -55,6 +55,10 @@ class Pamr extends Algo {
    * @return {array} - New weights
   */
   computeWeights() {
+    if (this.X.length === 0) {
+      return this.B[0];
+    }
+
     const b = this.B[0];
     const x = this.X[0];
 

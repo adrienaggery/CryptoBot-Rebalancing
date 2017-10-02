@@ -8,16 +8,6 @@ const mathjs = require('mathjs');
  * B and b for weights).
  */
 class Algo {
-  /* If true replace missing values (like prices) by old value */
-  static REPLACE_MISSING = true;
-
-  /*
-    Type of prices going into the step function.
-    ratio: xt / xt-1
-    raw: pt
-  */
-  static PRICE_TYPE = 'raw';
-
   /**
   * Set initial weights.
   *
@@ -25,6 +15,9 @@ class Algo {
   * @return {array} - Array with initialized weights
   */
   static defaultWeights(m) {
+    if (typeof m !== 'number') {
+      throw new TypeError(`Argument m should be a number but got ${typeof m} instead.`);
+    }
     return Array(m).fill(0);
   }
 
@@ -34,11 +27,18 @@ class Algo {
    * @param {number} m - Number of assets
    */
   constructor(m) {
+    /*
+      Type of prices going into the step function.
+      ratio: xt / xt-1
+      raw: pt
+    */
+    this.PRICE_TYPE = 'raw';
+
     this.B = [];
     this.X = [];
     this.m = m;
 
-    this.B.unshift(this.defaultWeights(m));
+    this.B.unshift(Algo.defaultWeights(m));
   }
 
   /**
@@ -50,6 +50,9 @@ class Algo {
    * @return {void}
    */
   convertPrices(x) {
+    if (x.length !== this.m) {
+      throw new Error('Argument x should be of same size than the instance m variable.');
+    }
     if (this.PRICE_TYPE === 'ratio') {
       if (this.x) {
         this.X.unshift(mathjs.dotDivide(x, this.x));
@@ -63,14 +66,18 @@ class Algo {
 
   /**
    * Updates X matrix by converting prices to the algorithm needs.
-   * Then compute the new weights and returns them.
+   * Then compute the new weights, unshift B matrix and returns them.
    *
    * @param {array} x - Prices
    * @return {array} - Returns last weights
    */
   runOnce(x) {
     this.convertPrices(x);
-    return this.computeWeights();
+
+    const weights = this.computeWeights();
+    this.B.unshift(weights);
+
+    return weights;
   }
 
   /**
