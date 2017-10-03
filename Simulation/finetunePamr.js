@@ -1,11 +1,8 @@
 #!/usr/bin/env node
+const bot = require('commander');
 
-/* eslint-disable */
+const Pamr = require('../algos/Pamr');
 
-const m = require('mathjs')
-const bot = require('commander')
-
-const PAMR = require('../PAMR')
 const datasets = {
     neo: require('./datasets-16-09-17/BTC-NEO'),
     omg: require('./datasets-16-09-17/BTC-OMG'),
@@ -20,18 +17,6 @@ const datasets = {
 }
 
 const getPairsClose = (i, pairs) => pairs.map(pair => datasets[pair][i].close)
-const onNewPortfolio = (bt, btplus1) => b.push(btplus1)
-const getWealth = (wealth, b, x) => {
-    const length = Math.min(b.length, x.length)
-    const _b = b.slice(-length)
-    const _x = x.slice(-length)
-    for (i = length - 1; i >= 0; i--) {
-        const dailyReturn = m.dot(_b[i], _x[i])
-        if (dailyReturn > 0)
-            wealth *= dailyReturn
-    }
-    return wealth
-}
 
 const runSimulation = (pamr, pairs, s, c, investedamount) => {
     const b = []
@@ -54,26 +39,29 @@ const runSimulation = (pamr, pairs, s, c, investedamount) => {
 }
 
 bot
-    .version('1.1.0')
-    .usage('<pairs....> [options]')
-    .arguments('<pairs...>')
-    .option('-s, --start <start>', 'specify the start datapoint (10 would be 10 datapoints from now)')
-    .option('-c, --count <count>', 'specify how much datapoints should be computed')
-    .option('-v, --variant <variant>', 'specify with algorithm to use (PAMR0 = 0, PAMR1 = 1, PAMR2 = 2)')
-    .option('-E, --epsilon <epsilon>', 'specify the Epsilon value used by the Insensitive Loss function')
-    .option('-C, --agressivity <agressivity>', 'specify the agressivity C value used by the PAMR1/2 rebalancing')
-    .option('-i, --investedamount <investedamount>', 'specify the amount in BTC invested in this portfolio (recommended min is 0.05 as this allows to prevent placing orders less than 50k SAT)')
-    .action((pairs, options) => {
-        const s = parseInt(options.start) || 0
-        const c = parseInt(options.count) || 30
-        const variant = parseInt(options.variant) || 0
-        const E = parseFloat(options.epsilon) || undefined
-        const C = parseFloat(options.aggressivity) || 0
-        const investedamount = parseFloat(options.investedamount) || 0
+  .version('1.1.0')
+  .usage('<pairs....> [options]')
+  .arguments('<pairs...>')
+  .option('-s, --start <start>', 'specify the start datapoint (10 would be 10 datapoints from now)')
+  .option('-c, --count <count>', 'specify how much datapoints should be computed')
+  .option('-v, --variant <variant>', 'specify how much datapoints should be computed')
+  .action((pairs, options) => {
+    const s = parseInt(options.start) || 0;
+    const c = parseInt(options.count) || 30;
+    const variant = parseInt(options.variant) || 0;
 
-        const results = []
+    const E = 0;
+    const C = 0;
 
-        if (typeof E !== 'number') {
+    const results = [];
+    const pamr = new Pamr();
+
+    for (let E = 0; E < 1; E += 0.01) {
+      for (let C = 0; C < 1000; C += 1) {
+
+      }
+    }
+      if (typeof E !== 'number') {
             for (e = 0; e < 1; e += 0.05) {
                 const initialPortfolio = Array(pairs.length).fill(0)
                 const pamr = new PAMR(initialPortfolio, e, variant, C)

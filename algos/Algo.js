@@ -1,5 +1,7 @@
 const mathjs = require('mathjs');
 
+const Logger = require('../shared/Logger');
+
 /**
  * Base class of all implemented algorithms for calculating new portoflios.
  * Subclass the computeWeights method.
@@ -18,7 +20,10 @@ class Algo {
     if (typeof m !== 'number') {
       throw new TypeError(`Argument m should be a number but got ${typeof m} instead.`);
     }
-    return Array(m).fill(1).fill(0, 1);
+    const weights = Array(m).fill(1).fill(0, 1);
+    Logger.debug(`Initialized default weights to ${JSON.stringify(weights)}.`);
+
+    return weights;
   }
 
   /**
@@ -56,11 +61,13 @@ class Algo {
     if (this.PRICE_TYPE === 'ratio') {
       if (this.x) {
         this.X.unshift(mathjs.dotDivide(x, this.x));
+        Logger.info(`Saved new x vector ${JSON.stringify(this.X[0])}.`);
       }
       this.x = x;
     }
     if (this.PRICE_TYPE === 'raw') {
       this.X.unshift(x);
+      Logger.info(`Saved new x vector ${JSON.stringify(this.X[0])}.`);
     }
   }
 
@@ -77,17 +84,19 @@ class Algo {
     const weights = this.computeWeights();
     this.B.unshift(weights);
 
+    Logger.info(`Computed new b vector ${JSON.stringify(this.B[0])}.`);
+
     return weights;
   }
 
   /**
    * Loops throught provided prices matrix and compute weights for each vector.
    *
-   * @param {array} X - Matric of price vectors
+   * @param {array} X - Matrix of price vectors
    * @return {void}
    */
   runBatch(X) {
-    X.forEach((x) => {
+    X.slice().reverse().forEach((x) => {
       this.runOnce(x);
     });
   }
@@ -109,6 +118,8 @@ class Algo {
 
     const dailyReturns = B.map((b, i) => mathjs.dot(b, X[i]));
     const wealth = dailyReturns.reduce((acc, v) => acc * v, initial);
+
+    Logger.debug(`Computed wealth initial ${initial}BTC to ${wealth}BTC.`);
 
     return wealth;
   }
