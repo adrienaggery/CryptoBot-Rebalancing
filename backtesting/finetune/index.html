@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <title>3D Map</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+      #graph {
+        width: 100vw;
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="file" id="file" name="files[]" multiple>
+    <div id="graph"></div>
+    <script>
+      var node = document.getElementById('graph');
+      var layout = {
+        title: '3D Map',
+        autosize: true,
+        scene: {
+          xaxis: {
+            title: 'E',
+          },
+          yaxis: {
+            title: 'C',
+          },
+          zaxis: {
+            title: 'wealth'
+          }
+        }
+      };
+
+      function randomRGB() {
+        var r = Math.floor(Math.random()*256);
+        var g = Math.floor(Math.random()*256);
+        var b = Math.floor(Math.random()*256);
+        return `rgb(${r}, ${g}, ${b})`;
+      }
+
+      function buildPlotSet(dataset) {
+        var set = {};
+        set.x = (dataset.map(function(item) { return item.E }));
+        set.y = (dataset.map(function(item) { return item.C }));
+        set.z = (dataset.map(function(item) { return item.wealth }));
+        set.type = 'mesh3d';
+        set.opacity = 0.6;
+        set.color = randomRGB();
+        return [set];
+      }
+
+      function handleFileSelect(e) {
+        var files = e.target.files;
+        for (var i = 0, file; file = files[i]; i++) {
+          var reader = new FileReader();
+          reader.onload = function(e){
+            var dataset = JSON.parse(e.target.result);
+            Plotly.plot(node, buildPlotSet(dataset), layout);
+          };
+          var dataset = reader.readAsText(file);
+        }
+      }
+
+      document.getElementById('file').addEventListener('change', handleFileSelect, false);
+    </script>
+  </body>
+</html>

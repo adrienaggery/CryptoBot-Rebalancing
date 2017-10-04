@@ -69,6 +69,5 @@ commander
     });
 
     Logger.success(`Best settings for that timeperiod is ${JSON.stringify(best)}.`, 0);
-    Logger
   })
   .parse(process.argv);
