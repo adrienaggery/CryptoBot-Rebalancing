@@ -42,7 +42,7 @@ commander
     const results = [];
 
     for (let E = 0; E < 1; E += 0.01) {
-      for (let C = 0; C <= 400; C += 10) {
+      for (let C = 1; C <= 401; C += 10) {
         const pamr = new Pamr(pairs.length, variant, E, C);
         pamr.runBatch(batch);
         const wealth = pamr.computeWealth(1);
