@@ -20,7 +20,7 @@ class Pamr extends Algo {
    * @param {number} E - Epsilon value used by Insensitive Loss function
    * @param {number} C - Aggressivity parameter used by variant 1 and 2
    */
-  constructor(m, variant = 0, E = 0.5, C = 500) {
+  constructor(m, variant = 0, E = 0.5, C = 200) {
     super(m);
 
     this.PRICE_TYPE = 'ratio';
