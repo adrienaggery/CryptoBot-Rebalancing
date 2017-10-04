@@ -6,15 +6,15 @@ const Pamr = require('../../algos/Pamr');
 
 /* eslint-disable */
 const datasets = {
-  neo: require('../datasets/day/04-10-2017/BTC-NEO'),
-  omg: require('../datasets/day/04-10-2017/BTC-OMG'),
-  eth: require('../datasets/day/04-10-2017/BTC-ETH'),
-  ltc: require('../datasets/day/04-10-2017/BTC-LTC'),
-  xrp: require('../datasets/day/04-10-2017/BTC-XRP'),
-  strat: require('../datasets/day/04-10-2017/BTC-STRAT'),
-  dash: require('../datasets/day/04-10-2017/BTC-DASH'),
-  zec: require('../datasets/day/04-10-2017/BTC-ZEC'),
-  etc: require('../datasets/day/04-10-2017/BTC-ETC')
+  neo: require('../datasets/hour/04-10-2017/BTC-NEO'),
+  omg: require('../datasets/hour/04-10-2017/BTC-OMG'),
+  eth: require('../datasets/hour/04-10-2017/BTC-ETH'),
+  ltc: require('../datasets/hour/04-10-2017/BTC-LTC'),
+  xrp: require('../datasets/hour/04-10-2017/BTC-XRP'),
+  strat: require('../datasets/hour/04-10-2017/BTC-STRAT'),
+  dash: require('../datasets/hour/04-10-2017/BTC-DASH'),
+  zec: require('../datasets/hour/04-10-2017/BTC-ZEC'),
+  etc: require('../datasets/hour/04-10-2017/BTC-ETC')
 };
 /* eslint-enable */
 
@@ -42,7 +42,7 @@ commander
     const results = [];
 
     for (let E = 0; E < 1; E += 0.01) {
-      for (let C = 1; C <= 401; C += 10) {
+      for (let C = 1; C <= 401; C += 40) {
         const pamr = new Pamr(pairs.length, variant, E, C);
         pamr.runBatch(batch);
         const wealth = pamr.computeWealth(1);
