@@ -69,11 +69,11 @@ class Pamr extends Algo {
   /**
    * compute and return the new weights.
    *
-   * @return {array} - New weights
+   * @return {array|null} - New weights
   */
   computeWeights() {
     if (this.X.length === 0) {
-      return this.B[0];
+      return null;
     }
 
     const b = this.B[0];

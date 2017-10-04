@@ -6,16 +6,15 @@ const Pamr = require('../../algos/Pamr');
 
 /* eslint-disable */
 const datasets = {
-  neo: require('../datasets/16-09-17/BTC-NEO'),
-  omg: require('../datasets/16-09-17/BTC-OMG'),
-  eth: require('../datasets/16-09-17/BTC-ETH'),
-  ltc: require('../datasets/16-09-17/BTC-LTC'),
-  xrp: require('../datasets/16-09-17/BTC-XRP'),
-  strat: require('../datasets/16-09-17/BTC-STRAT'),
-  bch: require('../datasets/16-09-17/BTC-BCH'),
-  dash: require('../datasets/16-09-17/BTC-DASH'),
-  zec: require('../datasets/16-09-17/BTC-ZEC'),
-  etc: require('../datasets/16-09-17/BTC-ETC')
+  neo: require('../datasets/day/04-10-2017/BTC-NEO'),
+  omg: require('../datasets/day/04-10-2017/BTC-OMG'),
+  eth: require('../datasets/day/04-10-2017/BTC-ETH'),
+  ltc: require('../datasets/day/04-10-2017/BTC-LTC'),
+  xrp: require('../datasets/day/04-10-2017/BTC-XRP'),
+  strat: require('../datasets/day/04-10-2017/BTC-STRAT'),
+  dash: require('../datasets/day/04-10-2017/BTC-DASH'),
+  zec: require('../datasets/day/04-10-2017/BTC-ZEC'),
+  etc: require('../datasets/day/04-10-2017/BTC-ETC')
 };
 /* eslint-enable */
 
@@ -29,7 +28,7 @@ const generateBatch = (s, c, pairs) => {
 
 commander
   .version('2.0.0')
-  .usage('<pairs....> [options]')
+  .usage('<pairs...> [options]')
   .arguments('<pairs...>')
   .option('-s, --start <start>', 'specify the start datapoint (10 would be 10 datapoints from now)')
   .option('-c, --count <count>', 'specify how much datapoints should be computed')
@@ -43,19 +42,23 @@ commander
     const results = [];
 
     for (let E = 0; E < 1; E += 0.01) {
-      for (let C = (variant > 0 ? 0 : 1000); C <= 1000; C += 5) {
+      for (let C = 0; C <= 1000; C += 50) {
         const pamr = new Pamr(pairs.length, variant, E, C);
         pamr.runBatch(batch);
         const wealth = pamr.computeWealth(1);
         results.push({
           E, C, wealth,
         });
+        if (E === -1) {
+          console.log(batch);
+          console.log(pamr.X, pamr.B);
+        }
       }
     }
 
     fs.writeFile(`./results/Pamr${variant}-${s}-${c}.json`, JSON.stringify(results), (err) => {
       if (err) { return console.error(`Failed to save results. ${err}`); }
-      return console.log('Saved results file.');
+      return null;
     });
 
     const best = results.reduce((mem, current) => {
@@ -66,5 +69,6 @@ commander
     });
 
     Logger.success(`Best settings for that timeperiod is ${JSON.stringify(best)}.`, 0);
+    Logger
   })
   .parse(process.argv);

@@ -82,7 +82,9 @@ class Algo {
     this.convertPrices(x);
 
     const weights = this.computeWeights();
-    this.B.unshift(weights);
+    if (weights) {
+      this.B.unshift(weights);
+    }
 
     Logger.info(`Computed new b vector ${JSON.stringify(this.B[0])}.`);
 
@@ -109,14 +111,19 @@ class Algo {
    */
   computeWealth(initial) {
     const length = Math.min(this.B.length, this.X.length);
-    const B = this.B.slice(-length);
-    const X = this.X.slice(-length);
+    const B = this.B.slice(-length).reverse();
+    const X = this.X.slice(-length).reverse();
 
     if (X.length === 0) {
       return initial;
     }
 
-    const dailyReturns = B.map((b, i) => mathjs.dot(b, X[i]));
+    const dailyReturns = B.map((b, i) => {
+      const grossReturn = mathjs.dot(b, X[i]);
+      const paidComission =
+        0.0025 * mathjs.sum(mathjs.abs(mathjs.subtract(b, i > 0 ? B[i - 1] : b)));
+      return grossReturn - paidComission;
+    });
     const wealth = dailyReturns.reduce((acc, v) => acc * v, initial);
 
     Logger.debug(`Computed wealth initial ${initial}BTC to ${wealth}BTC.`);
