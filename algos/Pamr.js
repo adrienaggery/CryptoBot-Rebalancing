@@ -70,7 +70,7 @@ class Pamr extends Algo {
    * compute and return the new weights.
    *
    * @return {array|null} - New weights
-  */
+   */
   computeWeights() {
     if (this.X.length === 0) {
       return null;
