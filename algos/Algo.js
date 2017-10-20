@@ -27,6 +27,23 @@ class Algo {
   }
 
   /**
+  * Checks if a portfolio is valid.
+  *
+  * @param {array} b - portfolio
+  * @return {bool} - Valid or not
+  */
+  static isPortfolioValid(b) {
+    if (!Array.isArray(b)) {
+      return false;
+    }
+    const sum = mathjs.sum(b);
+    if (sum < 0.99999999 || sum > 1.00000001) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
    * initialize instance.
    *
    * @param {number} m - Number of assets
@@ -80,10 +97,15 @@ class Algo {
    */
   runOnce(x) {
     this.convertPrices(x);
-
     const weights = this.computeWeights();
-    if (weights) {
+
+    if (Algo.isPortfolioValid(weights)) {
       this.B.unshift(weights);
+    } else {
+      Logger.error(`The returned portfolio is invalid.
+                    b: ${JSON.stringify(weights)}
+                    X: ${JSON.stringify(this.X)}
+                    B: ${JSON.stringify(this.B)}`);
     }
 
     Logger.info(`Computed new b vector ${JSON.stringify(this.B[0])}.`);

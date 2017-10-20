@@ -1,7 +1,7 @@
 const mathjs = require('mathjs');
 
 const Algo = require('./Algo');
-const { vectoravg, simplexProjection } = require('./math');
+const { simplexProjection } = require('./math');
 
 /**
  * Passive aggressive mean reversion strategy for portfolio selection.
@@ -39,7 +39,7 @@ class Pamr extends Algo {
   tau(insensitiveLoss) {
     const x = this.X[0];
     if (this.variant === 0) {
-      const denominator = mathjs.pow(mathjs.norm(mathjs.subtract(x, vectoravg(x))), 2);
+      const denominator = mathjs.pow(mathjs.norm(mathjs.subtract(x, mathjs.mean(x))), 2);
       if (denominator <= 0) {
         return 0;
       }
@@ -47,7 +47,7 @@ class Pamr extends Algo {
       return tau;
     }
     if (this.variant === 1) {
-      const denominator = mathjs.pow(mathjs.norm(mathjs.subtract(x, vectoravg(x))), 2);
+      const denominator = mathjs.pow(mathjs.norm(mathjs.subtract(x, mathjs.mean(x))), 2);
       if (denominator <= 0) {
         return 0;
       }
@@ -55,7 +55,7 @@ class Pamr extends Algo {
       return Math.min(this.C, tau);
     }
     if (this.variant === 2) {
-      const denominator = mathjs.pow(mathjs.norm(mathjs.subtract(x, vectoravg(x))), 2)
+      const denominator = mathjs.pow(mathjs.norm(mathjs.subtract(x, mathjs.mean(x))), 2)
         + (0.5 / this.C);
       if (denominator <= 0) {
         return 0;
@@ -81,7 +81,7 @@ class Pamr extends Algo {
 
     const insensitiveLoss = Math.max(0, mathjs.dot(b, x) - this.E);
     const tau = this.tau(insensitiveLoss);
-    const weights = mathjs.subtract(b, mathjs.multiply(tau, mathjs.subtract(x, vectoravg(x))));
+    const weights = mathjs.subtract(b, mathjs.multiply(tau, mathjs.subtract(x, mathjs.mean(x))));
     const projection = simplexProjection(weights);
 
     return projection;

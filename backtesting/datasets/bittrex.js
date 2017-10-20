@@ -40,7 +40,7 @@ commander
   .version('1.0.0')
   .usage('<pairs...> [options]')
   .arguments('<pairs...>')
-  .option('-i --interval <interval>', 'specify the tickInterval that will be passed to bittrex API.')
+  .option('-i --interval <interval>', 'specify the tickInterval that will be passed to bittrex API. (oneMin, fiveMin, thirtyMin, hour, day)')
   .action((pairs, options) => {
     pairs.forEach((pair) => {
       createDataset(pair, options.interval);

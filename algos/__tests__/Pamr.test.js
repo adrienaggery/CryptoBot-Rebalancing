@@ -24,9 +24,9 @@ describe('Pamr', () => {
       const instance = new Pamr(4);
       expect(instance.computeWeights).toBeDefined();
     });
-    it('should return the same portfolio if there no prices in X', () => {
+    it('should return null if there no prices in X', () => {
       const instance = new Pamr(4);
-      expect(instance.computeWeights()).toEqual(instance.B[0]);
+      expect(instance.computeWeights()).toEqual(null);
     });
     it('should return an array of same size than instance.m', () => {
       const instance = new Pamr(4);

@@ -24,7 +24,7 @@ const success = (message, debugLevel = 2) => {
   log(type, message, debugLevel);
 };
 
-const warning = (message, debugLevel = 2) => {
+const warning = (message, debugLevel = 1) => {
   const type = '[Warning]'.black.bgYellow;
   log(type, message, debugLevel);
 };
